@@ -1,0 +1,25 @@
+{
+  "name": "default",
+  "displayName": "Default",
+  "description": "Standard Claude Code configuration with balanced settings",
+  "version": "1.0.0",
+  "settings": {
+    "autoUpdaterEnabled": true,
+    "includeCoAuthoredBy": true,
+    "preferredNotifChannel": "auto",
+    "hasCompletedOnboarding": true,
+    "theme": "dark",
+    "verbose": false,
+    "permissions": {
+      "allow": [
+        "Bash(git:*)",
+        "Bash(npm:*)",
+        "Bash(node:*)",
+        "Read(**)",
+        "Write(**)"
+      ],
+      "deny": []
+    },
+    "env": {}
+  }
+}

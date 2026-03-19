@@ -1,0 +1,27 @@
+{
+  "name": "fast",
+  "displayName": "Fast",
+  "description": "Optimized Claude Code configuration for speed with expanded permissions",
+  "version": "1.0.0",
+  "settings": {
+    "autoUpdaterEnabled": false,
+    "includeCoAuthoredBy": false,
+    "preferredNotifChannel": "terminal",
+    "hasCompletedOnboarding": true,
+    "theme": "dark",
+    "verbose": false,
+    "permissions": {
+      "allow": [
+        "Bash(*)",
+        "Read(**)",
+        "Write(**)",
+        "WebFetch(*)"
+      ],
+      "deny": []
+    },
+    "env": {
+      "CLAUDE_FAST_MODE": "1",
+      "CLAUDE_SKIP_CONFIRMATIONS": "1"
+    }
+  }
+}

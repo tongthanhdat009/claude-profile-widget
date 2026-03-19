@@ -1,0 +1,26 @@
+{
+  "name": "strict",
+  "displayName": "Strict",
+  "description": "Strict Claude Code configuration with minimal permissions and enhanced safety",
+  "version": "1.0.0",
+  "settings": {
+    "autoUpdaterEnabled": true,
+    "includeCoAuthoredBy": true,
+    "preferredNotifChannel": "auto",
+    "hasCompletedOnboarding": true,
+    "theme": "dark",
+    "verbose": true,
+    "permissions": {
+      "allow": [
+        "Read(**)"
+      ],
+      "deny": [
+        "Bash(*)",
+        "Write(**)"
+      ]
+    },
+    "env": {
+      "CLAUDE_STRICT_MODE": "1"
+    }
+  }
+}
