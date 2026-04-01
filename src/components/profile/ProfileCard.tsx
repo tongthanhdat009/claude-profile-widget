@@ -23,7 +23,12 @@ export function ProfileCard({ profile, isSelected, onClick }: ProfileCardProps) 
         <span className="text-sm font-semibold text-gray-100">
           {profile.displayName}
         </span>
-        <div className="flex gap-1">
+        <div className="flex gap-1 items-center">
+          {profile.source === "custom" && (
+            <span className="text-xs px-1.5 py-0.5 bg-purple-900/50 text-purple-400 rounded">
+              custom
+            </span>
+          )}
           {profile.isActive && (
             <StatusBadge status="active" label="Active" />
           )}
@@ -42,6 +47,11 @@ export function ProfileCard({ profile, isSelected, onClick }: ProfileCardProps) 
         {profile.settings.permissions.allow.length > 3 && (
           <span className="text-xs px-1.5 py-0.5 bg-gray-800 rounded text-gray-500">
             +{profile.settings.permissions.allow.length - 3} more
+          </span>
+        )}
+        {Object.keys(profile.settings.env).length > 0 && (
+          <span className="text-xs px-1.5 py-0.5 bg-blue-900/50 text-blue-400 rounded">
+            {Object.keys(profile.settings.env).length} env vars
           </span>
         )}
       </div>

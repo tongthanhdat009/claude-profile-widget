@@ -22,9 +22,13 @@ export interface Profile {
   settings: ProfileSettings;
 }
 
+export type ProfileSource = 'bundled' | 'custom';
+
 export interface ProfileWithMeta extends Profile {
+  id?: string;
   fileName: string;
   filePath: string;
   isActive: boolean;
   loadedAt: string;
+  source: ProfileSource;
 }

@@ -7,21 +7,10 @@ use crate::services::file_service;
 const MAX_BACKUPS: usize = 20;
 
 /// Returns the path to the Claude Code settings.json file.
-/// On Windows: `%APPDATA%\Claude\settings.json`
-/// On macOS/Linux: `~/.claude/settings.json`
+/// All platforms: `~/.claude/settings.json`
 pub fn resolve_settings_path() -> Result<PathBuf> {
-    #[cfg(target_os = "windows")]
-    {
-        let appdata = std::env::var("APPDATA")
-            .context("APPDATA environment variable not set")?;
-        Ok(PathBuf::from(appdata).join("Claude").join("settings.json"))
-    }
-
-    #[cfg(not(target_os = "windows"))]
-    {
-        let home = dirs::home_dir().context("Could not determine home directory")?;
-        Ok(home.join(".claude").join("settings.json"))
-    }
+    let home = dirs::home_dir().context("Could not determine home directory")?;
+    Ok(home.join(".claude").join("settings.json"))
 }
 
 /// Reads and parses the Claude Code settings.json.

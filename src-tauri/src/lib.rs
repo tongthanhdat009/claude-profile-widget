@@ -7,7 +7,7 @@ mod services;
 
 use commands::{
     backups::{create_backup, delete_backup, list_backups, restore_backup},
-    profiles::{get_profile, list_profiles},
+    profiles::{create_profile, delete_custom_profile, get_profile, list_profiles, update_profile, apply_custom_profile},
     settings::{
         apply_profile, file_exists, get_settings_path, list_directory, read_file, read_settings,
         write_file,
@@ -23,6 +23,10 @@ pub fn run() {
             // Profile commands
             list_profiles,
             get_profile,
+            create_profile,
+            update_profile,
+            delete_custom_profile,
+            apply_custom_profile,
             // Settings commands
             get_settings_path,
             read_settings,

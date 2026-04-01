@@ -8,6 +8,7 @@ interface ProfileListProps {
   onSelect: (profile: ProfileWithMeta) => void;
   isLoading: boolean;
   error: string | null;
+  onAddClick?: () => void;
 }
 
 export function ProfileList({
@@ -16,6 +17,7 @@ export function ProfileList({
   onSelect,
   isLoading,
   error,
+  onAddClick,
 }: ProfileListProps) {
   if (isLoading) {
     return (
@@ -37,26 +39,32 @@ export function ProfileList({
     );
   }
 
-  if (profiles.length === 0) {
-    return (
-      <EmptyState
-        icon="📂"
-        title="No profiles found"
-        description="Add JSON profile files to the profiles/ directory."
-      />
-    );
-  }
-
   return (
     <div className="flex flex-col gap-2 p-3">
-      {profiles.map((profile) => (
-        <ProfileCard
-          key={profile.fileName}
-          profile={profile}
-          isSelected={selectedProfile?.fileName === profile.fileName}
-          onClick={() => onSelect(profile)}
+      {onAddClick && (
+        <button
+          onClick={onAddClick}
+          className="w-full p-2 rounded-lg border border-dashed border-gray-700 text-gray-400 hover:border-claude-600 hover:text-claude-400 transition-colors text-sm"
+        >
+          + Add Profile
+        </button>
+      )}
+      {profiles.length === 0 ? (
+        <EmptyState
+          icon="📂"
+          title="No profiles found"
+          description="Click 'Add Profile' to create one."
         />
-      ))}
+      ) : (
+        profiles.map((profile) => (
+          <ProfileCard
+            key={profile.fileName}
+            profile={profile}
+            isSelected={selectedProfile?.fileName === profile.fileName}
+            onClick={() => onSelect(profile)}
+          />
+        ))
+      )}
     </div>
   );
 }

@@ -4,9 +4,12 @@ import { ProfileList } from "../components/profile/ProfileList";
 import { DiffPreview } from "../components/profile/DiffPreview";
 import { JsonPreview } from "../components/ui/JsonPreview";
 import { ActionBar } from "../components/ui/ActionBar";
+import { AddProfileModal } from "../components/profile/AddProfileModal";
 import { useProfiles } from "../hooks/useProfiles";
 import { useSettingsPath } from "../hooks/useSettingsPath";
 import { applyProfile } from "../services/settingsService";
+import { createProfile, deleteProfile, applyCustomProfile } from "../services/profileService";
+import type { Profile } from "../types/profile";
 
 type TabKey = "preview" | "diff";
 
@@ -32,13 +35,19 @@ export function ProfilesPage() {
     ok: boolean;
     message: string;
   } | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const handleApply = async () => {
     if (!selectedProfile) return;
     setApplying(true);
     setApplyStatus(null);
     try {
-      const backupPath = await applyProfile(selectedProfile.fileName);
+      let backupPath: string;
+      if (selectedProfile.source === "custom" && selectedProfile.id) {
+        backupPath = await applyCustomProfile(selectedProfile.id);
+      } else {
+        backupPath = await applyProfile(selectedProfile.fileName);
+      }
       setApplyStatus({
         ok: true,
         message: `Profile applied! Backup saved to: ${backupPath}`,
@@ -52,6 +61,27 @@ export function ProfilesPage() {
     } finally {
       setApplying(false);
     }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedProfile || selectedProfile.source !== "custom" || !selectedProfile.id) return;
+    if (!confirm(`Delete profile "${selectedProfile.displayName}"?`)) return;
+
+    try {
+      await deleteProfile(selectedProfile.id);
+      selectProfile(null);
+      await refreshProfiles();
+    } catch (err) {
+      setApplyStatus({
+        ok: false,
+        message: err instanceof Error ? err.message : String(err),
+      });
+    }
+  };
+
+  const handleSaveProfile = async (profile: Profile) => {
+    await createProfile(profile);
+    await refreshProfiles();
   };
 
   return (
@@ -79,6 +109,7 @@ export function ProfilesPage() {
             onSelect={selectProfile}
             isLoading={profilesLoading}
             error={profilesError}
+            onAddClick={() => setShowAddModal(true)}
           />
         </div>
 
@@ -138,13 +169,23 @@ export function ProfilesPage() {
               )}
 
               <ActionBar>
-                <button
-                  className="btn-primary text-sm flex-1"
-                  onClick={() => void handleApply()}
-                  disabled={applying}
-                >
-                  {applying ? "Applying…" : `Apply "${selectedProfile.displayName}"`}
-                </button>
+                <div className="flex gap-2 flex-1">
+                  {selectedProfile.source === "custom" && selectedProfile.id && (
+                    <button
+                      className="btn-secondary text-sm px-3"
+                      onClick={() => void handleDelete()}
+                    >
+                      Delete
+                    </button>
+                  )}
+                  <button
+                    className="btn-primary text-sm flex-1"
+                    onClick={() => void handleApply()}
+                    disabled={applying}
+                  >
+                    {applying ? "Applying…" : `Apply "${selectedProfile.displayName}"`}
+                  </button>
+                </div>
               </ActionBar>
             </>
           ) : (
@@ -156,6 +197,12 @@ export function ProfilesPage() {
           )}
         </div>
       </div>
+
+      <AddProfileModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSave={handleSaveProfile}
+      />
     </div>
   );
 }

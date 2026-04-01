@@ -42,10 +42,21 @@ pub struct Profile {
 pub struct ProfileWithMeta {
     #[serde(flatten)]
     pub profile: Profile,
+    pub id: Option<String>,
     pub file_name: String,
     pub file_path: String,
     pub is_active: bool,
     pub loaded_at: String,
+    #[serde(default)]
+    pub source: ProfileSource,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[serde(rename_all = "lowercase")]
+pub enum ProfileSource {
+    #[default]
+    Bundled,
+    Custom,
 }
 
 fn default_true() -> bool {

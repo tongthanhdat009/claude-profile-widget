@@ -30,3 +30,6 @@ src-tauri/gen/
 # Backups directory (keep structure but not contents)
 backups/*
 !backups/.gitkeep
+/.claude
+/.omc
+/src-tauri/.omc
